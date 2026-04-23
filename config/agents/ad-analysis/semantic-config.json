@@ -1,0 +1,616 @@
+{
+  "field_catalog": [
+    {
+      "field_id": "media_name",
+      "display_name": "媒体名称",
+      "aliases": ["媒体", "渠道", "media"],
+      "data_type": "string",
+      "semantic_role": "dimension",
+      "groupable": true
+    },
+    {
+      "field_id": "placement_type",
+      "display_name": "点位类型",
+      "aliases": ["版位类型", "资源位类型"],
+      "data_type": "string",
+      "semantic_role": "dimension",
+      "groupable": true,
+      "similar_fields": ["placement_name"],
+      "disambiguation_hint": "用于区分点位类别，不等于具体点位名称。"
+    },
+    {
+      "field_id": "placement_name",
+      "display_name": "点位名称",
+      "aliases": ["广告位名称", "资源位名称"],
+      "data_type": "string",
+      "semantic_role": "dimension",
+      "groupable": true,
+      "similar_fields": ["placement_type"],
+      "disambiguation_hint": "用于表示具体点位名称，不等于点位类别。"
+    },
+    {
+      "field_id": "creative_type",
+      "display_name": "定剧类型",
+      "aliases": ["素材id", "素材类型"],
+      "data_type": "string",
+      "semantic_role": "dimension",
+      "groupable": true
+    },
+    {
+      "field_id": "adcode",
+      "display_name": "adcode",
+      "aliases": ["排期id", "广告排期id"],
+      "data_type": "string",
+      "semantic_role": "primary_granularity",
+      "groupable": true
+    },
+    {
+      "field_id": "ad_type",
+      "display_name": "广告类型",
+      "aliases": ["投放类型"],
+      "data_type": "string",
+      "semantic_role": "dimension",
+      "allowed_values": ["CPM", "CPC", "FREE", "CPD"]
+    },
+    {
+      "field_id": "landing_page_url",
+      "display_name": "广告页落地页URL",
+      "aliases": ["落地页URL", "URL", "landing_page_url"],
+      "data_type": "string",
+      "semantic_role": "filter_dimension"
+    },
+    {
+      "field_id": "date",
+      "display_name": "投放时间",
+      "aliases": ["日期", "投放日期"],
+      "data_type": "date_range_text",
+      "semantic_role": "time"
+    },
+    {
+      "field_id": "accept_dmp_exposure",
+      "display_name": "是否接受DMP曝光监测",
+      "aliases": ["DMP曝光监测", "是否曝光监测"],
+      "data_type": "string",
+      "semantic_role": "quality_flag"
+    },
+    {
+      "field_id": "accept_dmp_click",
+      "display_name": "是否接受DMP点击监测",
+      "aliases": ["DMP点击监测", "是否点击监测"],
+      "data_type": "string",
+      "semantic_role": "quality_flag"
+    },
+    {
+      "field_id": "vehicle_model",
+      "display_name": "车型",
+      "aliases": ["车型代码", "car_model"],
+      "data_type": "string",
+      "semantic_role": "dimension",
+      "groupable": true
+    },
+    {
+      "field_id": "remark",
+      "display_name": "备注",
+      "aliases": ["说明", "备注说明"],
+      "data_type": "string",
+      "semantic_role": "business_text"
+    },
+    {
+      "field_id": "adslot",
+      "display_name": "adslot",
+      "aliases": ["排期详情", "定向说明"],
+      "data_type": "string",
+      "semantic_role": "business_text"
+    },
+    {
+      "field_id": "pv",
+      "display_name": "PV",
+      "aliases": ["曝光PV", "impressions"],
+      "data_type": "number",
+      "semantic_role": "raw_metric"
+    },
+    {
+      "field_id": "uv",
+      "display_name": "UV",
+      "aliases": ["曝光UV"],
+      "data_type": "number",
+      "semantic_role": "raw_metric"
+    },
+    {
+      "field_id": "click",
+      "display_name": "CLICK",
+      "aliases": ["点击", "clicks"],
+      "data_type": "number",
+      "semantic_role": "raw_metric"
+    },
+    {
+      "field_id": "arrivals",
+      "display_name": "官网到达",
+      "aliases": ["到达", "到达访客"],
+      "data_type": "number",
+      "semantic_role": "raw_metric"
+    },
+    {
+      "field_id": "valid_visitors",
+      "display_name": "有效访客",
+      "aliases": ["有效到达", "有效访客数"],
+      "data_type": "number",
+      "semantic_role": "raw_metric"
+    },
+    {
+      "field_id": "high_intent_visitors",
+      "display_name": "高意向访客",
+      "aliases": ["高意向", "高意向访客数"],
+      "data_type": "number",
+      "semantic_role": "raw_metric"
+    },
+    {
+      "field_id": "leads",
+      "display_name": "留资数",
+      "aliases": ["留资", "线索数"],
+      "data_type": "number",
+      "semantic_role": "raw_metric"
+    },
+    {
+      "field_id": "net_total_price",
+      "display_name": "净总价",
+      "aliases": ["净价", "净花费"],
+      "data_type": "number",
+      "semantic_role": "cost_component"
+    },
+    {
+      "field_id": "total_cost",
+      "display_name": "总成本",
+      "aliases": ["总费用", "成本"],
+      "data_type": "number",
+      "semantic_role": "cost_component"
+    },
+    {
+      "field_id": "effective_cost",
+      "display_name": "标准费用",
+      "aliases": ["分析费用"],
+      "data_type": "number",
+      "semantic_role": "derived_metric_source"
+    }
+  ],
+  "header_mapping_hints": [
+    {
+      "source_header": "媒体名称",
+      "target_field": "media_name",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "点位类型",
+      "target_field": "placement_type",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "点位名称",
+      "target_field": "placement_name",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "定剧类型",
+      "target_field": "creative_type",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "adcode",
+      "target_field": "adcode",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "广告类型",
+      "target_field": "ad_type",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "广告页落地页URL",
+      "target_field": "landing_page_url",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "投放时间",
+      "target_field": "date",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "是否接受DMP曝光监测",
+      "target_field": "accept_dmp_exposure",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "是否接受DMP点击监测",
+      "target_field": "accept_dmp_click",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "车型",
+      "target_field": "vehicle_model",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "备注",
+      "target_field": "remark",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "adslot",
+      "target_field": "adslot",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "PV",
+      "target_field": "pv",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "UV",
+      "target_field": "uv",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "CLICK",
+      "target_field": "click",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "官网到达",
+      "target_field": "arrivals",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "有效访客",
+      "target_field": "valid_visitors",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "高意向访客",
+      "target_field": "high_intent_visitors",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "留资数",
+      "target_field": "leads",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "净总价",
+      "target_field": "net_total_price",
+      "confidence": 1.0
+    },
+    {
+      "source_header": "总成本",
+      "target_field": "total_cost",
+      "confidence": 1.0
+    }
+  ],
+  "ambiguity_rules": [],
+  "time_parsing_rules": [
+    {
+      "rule_id": "campaign_date_range_parser",
+      "source_field": "date",
+      "type": "date_range_parser",
+      "pattern": "YYYY-MM-DD至YYYY-MM-DD",
+      "outputs": ["start_date", "end_date"],
+      "store_original_text": true
+    }
+  ],
+  "report_period_resolution": {
+    "priority": [
+      "explicit_user_confirmation",
+      "file_name_month_tag",
+      "dominant_time_range_month"
+    ],
+    "file_name_patterns": [
+      {
+        "pattern": "rawdataYYYYMM",
+        "output": "reporting_month"
+      }
+    ],
+    "requires_confirmation_for_reports": true,
+    "note": "文件名月份和行内投放时间区间可能不一致，月报任务必须确认报告月份。"
+  },
+  "derived_metric_sources": [
+    {
+      "rule_id": "effective_cost_rule",
+      "target_field": "effective_cost",
+      "logic": [
+        {
+          "when": {
+            "field": "placement_type",
+            "op": "contains",
+            "value": "百度品专"
+          },
+          "use_field": "total_cost"
+        },
+        {
+          "otherwise": true,
+          "use_field": "net_total_price"
+        }
+      ]
+    }
+  ],
+  "metric_catalog": [
+    {
+      "metric_id": "pv",
+      "name": "PV",
+      "type": "base_metric",
+      "field": "pv",
+      "aggregation_rule": "sum"
+    },
+    {
+      "metric_id": "click",
+      "name": "点击",
+      "type": "base_metric",
+      "field": "click",
+      "aggregation_rule": "sum"
+    },
+    {
+      "metric_id": "arrivals",
+      "name": "官网到达",
+      "type": "base_metric",
+      "field": "arrivals",
+      "aggregation_rule": "sum"
+    },
+    {
+      "metric_id": "valid_visitors",
+      "name": "有效访客",
+      "type": "base_metric",
+      "field": "valid_visitors",
+      "aggregation_rule": "sum"
+    },
+    {
+      "metric_id": "high_intent_visitors",
+      "name": "高意向访客",
+      "type": "base_metric",
+      "field": "high_intent_visitors",
+      "aggregation_rule": "sum"
+    },
+    {
+      "metric_id": "effective_cost",
+      "name": "标准费用",
+      "type": "derived_source_metric",
+      "field": "effective_cost",
+      "aggregation_rule": "sum"
+    },
+    {
+      "metric_id": "cpm",
+      "name": "CPM",
+      "type": "derived_metric",
+      "formula": "effective_cost / pv * 1000",
+      "required_fields": ["effective_cost", "pv"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    },
+    {
+      "metric_id": "cpc",
+      "name": "CPC",
+      "type": "derived_metric",
+      "formula": "effective_cost / click",
+      "required_fields": ["effective_cost", "click"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    },
+    {
+      "metric_id": "ctr",
+      "name": "点击率",
+      "type": "derived_metric",
+      "formula": "click / pv",
+      "required_fields": ["click", "pv"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    },
+    {
+      "metric_id": "arrival_rate",
+      "name": "到达率",
+      "type": "derived_metric",
+      "formula": "arrivals / click",
+      "required_fields": ["arrivals", "click"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    },
+    {
+      "metric_id": "valid_visitor_rate",
+      "name": "有效访客率",
+      "type": "derived_metric",
+      "formula": "valid_visitors / arrivals",
+      "required_fields": ["valid_visitors", "arrivals"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    },
+    {
+      "metric_id": "high_intent_rate",
+      "name": "高意向率",
+      "type": "derived_metric",
+      "formula": "high_intent_visitors / valid_visitors",
+      "required_fields": ["high_intent_visitors", "valid_visitors"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    },
+    {
+      "metric_id": "high_intent_cost",
+      "name": "高意向访客成本",
+      "type": "derived_metric",
+      "formula": "effective_cost / high_intent_visitors",
+      "required_fields": ["effective_cost", "high_intent_visitors"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    },
+    {
+      "metric_id": "valid_visitor_cost",
+      "name": "有效访客成本",
+      "type": "derived_metric",
+      "formula": "effective_cost / valid_visitors",
+      "required_fields": ["effective_cost", "valid_visitors"],
+      "null_strategy": "skip_if_denominator_missing_or_zero"
+    }
+  ],
+  "source_metric_trust_policy": {
+    "ignore_as_final_result_metrics": [
+      "点击率",
+      "到达率",
+      "有效访客成本",
+      "高意向访客成本",
+      "留资率",
+      "留资成本"
+    ],
+    "reason": "源表中的率和成本字段可能混有斜杠、0 和旧口径结果，最终分析以重算结果为准。"
+  },
+  "default_filters": [
+    {
+      "rule_id": "ghac_url_prefix_filter",
+      "type": "pre_filter",
+      "description": "仅分析 GHAC 指定域名落地页。",
+      "expression": {
+        "field": "landing_page_url",
+        "op": "starts_with",
+        "value": "https://www.ghac"
+      }
+    }
+  ],
+  "metric_specific_exclusions": [
+    {
+      "rule_id": "exclude_missing_exposure_from_cpm",
+      "applies_to_metrics": ["cpm", "ctr"],
+      "when": {
+        "operator": "and",
+        "conditions": [
+          {
+            "field": "accept_dmp_exposure",
+            "op": "equals",
+            "value": "否"
+          },
+          {
+            "field": "effective_cost",
+            "op": "gt",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "rule_id": "exclude_missing_click_from_click_based_metrics",
+      "applies_to_metrics": ["cpc", "arrival_rate"],
+      "when": {
+        "operator": "and",
+        "conditions": [
+          {
+            "field": "accept_dmp_click",
+            "op": "equals",
+            "value": "否"
+          },
+          {
+            "field": "effective_cost",
+            "op": "gt",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "rule_id": "exclude_free_from_cost_metrics",
+      "applies_to_metrics": [
+        "cpm",
+        "cpc",
+        "high_intent_cost",
+        "valid_visitor_cost"
+      ],
+      "when": {
+        "field": "ad_type",
+        "op": "equals",
+        "value": "FREE"
+      }
+    }
+  ],
+  "missing_data_policy": {
+    "states": ["zero", "missing", "untrackable", "not_applicable"],
+    "untrackable_when": {
+      "operator": "or",
+      "conditions": [
+        {
+          "field": "accept_dmp_exposure",
+          "op": "equals",
+          "value": "否"
+        },
+        {
+          "field": "accept_dmp_click",
+          "op": "equals",
+          "value": "否"
+        }
+      ]
+    },
+    "metric_handling": {
+      "cpm": "exclude_if_untrackable_or_missing",
+      "cpc": "exclude_if_untrackable_or_missing",
+      "ctr": "exclude_if_required_fields_missing",
+      "arrival_rate": "exclude_if_required_fields_missing",
+      "valid_visitor_rate": "exclude_if_required_fields_missing",
+      "high_intent_rate": "exclude_if_required_fields_missing",
+      "high_intent_cost": "exclude_if_required_fields_missing",
+      "valid_visitor_cost": "exclude_if_required_fields_missing"
+    },
+    "result_note_template": "部分点位因不可监测或关键字段缺失，未纳入相关率和成本指标计算。"
+  },
+  "text_semantic_rules": [
+    {
+      "rule_id": "remark_and_adslot_special_sample_classification",
+      "fields": ["remark", "adslot"],
+      "outputs": ["exclude", "include_with_warning", "normal"],
+      "priority_keywords": {
+        "exclude": ["仅录入", "无实际数据", "测试", "不纳入", "无投放"],
+        "include_with_warning": ["赠送", "补量", "特殊", "定向", "说明"]
+      }
+    }
+  ],
+  "clarification_cards": [
+    {
+      "card_id": "reporting_month",
+      "type": "single_select_or_input",
+      "title": "确认本次报告月份",
+      "prompt": "检测到文件名和投放时间区间可能不完全一致，请确认本次报告按哪个月份输出。",
+      "required": true
+    },
+    {
+      "card_id": "cost_rule_confirmation",
+      "type": "confirm",
+      "title": "确认费用口径",
+      "prompt": "除百度品专外默认使用净总价，百度品专使用总成本，是否按此口径执行？",
+      "required": true
+    },
+    {
+      "card_id": "free_slot_handling",
+      "type": "confirm",
+      "title": "确认 FREE 点位处理",
+      "prompt": "FREE 点位不纳入成本计算和成本对比，但保留在规模和说明类分析中，是否确认？",
+      "required": true
+    },
+    {
+      "card_id": "special_sample_handling",
+      "type": "review_list",
+      "title": "确认特殊样本处理",
+      "prompt": "以下样本在备注或 adslot 中被识别为特殊情况，请确认是排除还是保留并标注。",
+      "required": true
+    }
+  ],
+  "clarification_flow": [
+    {
+      "step": 1,
+      "card_id": "reporting_month"
+    },
+    {
+      "step": 2,
+      "card_id": "cost_rule_confirmation"
+    },
+    {
+      "step": 3,
+      "card_id": "free_slot_handling"
+    },
+    {
+      "step": 4,
+      "card_id": "special_sample_handling"
+    }
+  ],
+  "supported_intents": [
+    "metric_query",
+    "trend_analysis",
+    "dimension_breakdown",
+    "anomaly_diagnosis",
+    "monthly_report",
+    "field_explanation",
+    "metric_definition_explanation"
+  ]
+}

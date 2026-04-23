@@ -1,0 +1,71 @@
+{
+  "agent_id": "ad-analysis",
+  "name": "广告数据智能体",
+  "description": "用于分析广告 rawdata，支持问答、趋势分析、结构化月报和跨月对比。",
+  "status": "active",
+  "domain": "advertising",
+  "supported_file_types": ["csv", "xlsx", "xls"],
+  "capabilities": [
+    "natural_language_qa",
+    "metric_analysis",
+    "trend_analysis",
+    "monthly_report",
+    "cross_month_comparison",
+    "field_explanation",
+    "metric_explanation"
+  ],
+  "dataset_profile": {
+    "summary": "广告投放明细和阶段性汇总数据",
+    "expected_granularity": [
+      "adcode",
+      "date",
+      "media",
+      "placement",
+      "vehicle_model"
+    ],
+    "required_minimum_fields": [
+      "投放时间",
+      "媒体名称",
+      "广告页落地页URL"
+    ],
+    "recommended_fields": [
+      "点位类型",
+      "adcode",
+      "广告类型",
+      "是否接受DMP曝光监测",
+      "是否接受DMP点击监测",
+      "车型",
+      "备注",
+      "adslot",
+      "PV",
+      "CLICK",
+      "官网到达",
+      "有效访客",
+      "高意向访客",
+      "净总价",
+      "总成本"
+    ]
+  },
+  "default_task_flow": [
+    "file_intake",
+    "schema_detection",
+    "clarification",
+    "plan_confirmation",
+    "analysis_execution",
+    "report_or_answer_rendering"
+  ],
+  "clarification_policy": {
+    "required_before_execution": [
+      "selected_dataset",
+      "reporting_month",
+      "time_range",
+      "cost_rule_confirmation",
+      "special_sample_handling"
+    ],
+    "confirmation_style": "button_first"
+  },
+  "template_refs": [
+    "report-templates/single-month-report.json",
+    "report-templates/multi-month-report.json"
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data-agent-codex.local/schemas/common.schema.json",
+  "title": "Data Agent Common Definitions",
+  "type": "object",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_./:-]+$"
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "fieldRef": {
+      "$ref": "#/$defs/identifier"
+    },
+    "metricRef": {
+      "$ref": "#/$defs/identifier"
+    },
+    "optionObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "stepCardRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step", "card_id"],
+      "properties": {
+        "step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "card_id": {
+          "$ref": "#/$defs/identifier"
+        }
+      }
+    },
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["field", "op"],
+          "properties": {
+            "field": {
+              "$ref": "#/$defs/fieldRef"
+            },
+            "op": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "value": {},
+            "values": {
+              "type": "array"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["operator", "conditions"],
+          "properties": {
+            "operator": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "conditions": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/condition"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

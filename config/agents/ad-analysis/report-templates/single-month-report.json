@@ -1,0 +1,79 @@
+{
+  "template_id": "ad-monthly-report-single-month-v1",
+  "name": "广告月报-单月模板",
+  "trigger_intents": ["monthly_report"],
+  "applicability": {
+    "month_count": 1
+  },
+  "required_confirmations": [
+    "time_range",
+    "cost_rule_confirmation",
+    "special_sample_handling"
+  ],
+  "sections": [
+    {
+      "section_id": "header",
+      "title": "报告头部",
+      "output_blocks": [
+        "title",
+        "time_range",
+        "dataset_summary",
+        "calculation_scope_note"
+      ]
+    },
+    {
+      "section_id": "overall_overview",
+      "title": "整体情况",
+      "required_data": [
+        "vehicle_model_summary",
+        "high_intent_cost",
+        "valid_visitor_cost"
+      ],
+      "output_blocks": [
+        "metric_cards",
+        "vehicle_model_comparison_chart",
+        "summary_text"
+      ]
+    },
+    {
+      "section_id": "vehicle_breakdown",
+      "title": "分车型具体表现",
+      "required_data": [
+        "media_breakdown",
+        "placement_breakdown",
+        "conversion_funnel_breakdown"
+      ],
+      "output_blocks": [
+        "vehicle_tabs",
+        "media_placement_chart",
+        "funnel_analysis_text",
+        "insight_text",
+        "next_actions"
+      ]
+    },
+    {
+      "section_id": "other_insights",
+      "title": "其他洞察",
+      "required_data": [
+        "special_samples_summary",
+        "cross_vehicle_patterns"
+      ],
+      "output_blocks": [
+        "insight_cards",
+        "warning_notes"
+      ]
+    },
+    {
+      "section_id": "conclusion_actions",
+      "title": "结论与行动建议",
+      "required_data": [
+        "top_findings",
+        "recommended_actions"
+      ],
+      "output_blocks": [
+        "bullet_summary",
+        "action_list"
+      ]
+    }
+  ]
+}

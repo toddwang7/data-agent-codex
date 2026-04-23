@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data-agent-codex.local/schemas/report-template.schema.json",
+  "title": "Data Agent Report Template",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "template_id",
+    "name",
+    "trigger_intents",
+    "applicability",
+    "required_confirmations",
+    "sections"
+  ],
+  "properties": {
+    "template_id": {
+      "$ref": "common.schema.json#/$defs/identifier"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "trigger_intents": {
+      "$ref": "common.schema.json#/$defs/stringArray"
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "month_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "month_count_min": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "anyOf": [
+        {
+          "required": ["month_count"]
+        },
+        {
+          "required": ["month_count_min"]
+        }
+      ]
+    },
+    "required_confirmations": {
+      "$ref": "common.schema.json#/$defs/stringArray"
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["section_id", "title", "output_blocks"],
+        "properties": {
+          "section_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "required_data": {
+            "$ref": "common.schema.json#/$defs/stringArray"
+          },
+          "output_blocks": {
+            "$ref": "common.schema.json#/$defs/stringArray"
+          }
+        }
+      }
+    }
+  }
+}

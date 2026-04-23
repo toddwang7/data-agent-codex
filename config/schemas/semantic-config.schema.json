@@ -1,0 +1,486 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data-agent-codex.local/schemas/semantic-config.schema.json",
+  "title": "Data Agent Semantic Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "field_catalog",
+    "header_mapping_hints",
+    "ambiguity_rules",
+    "time_parsing_rules",
+    "report_period_resolution",
+    "derived_metric_sources",
+    "metric_catalog",
+    "source_metric_trust_policy",
+    "default_filters",
+    "metric_specific_exclusions",
+    "missing_data_policy",
+    "text_semantic_rules",
+    "clarification_cards",
+    "clarification_flow",
+    "supported_intents"
+  ],
+  "properties": {
+    "field_catalog": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field_id",
+          "display_name",
+          "aliases",
+          "data_type",
+          "semantic_role"
+        ],
+        "properties": {
+          "field_id": {
+            "$ref": "common.schema.json#/$defs/fieldRef"
+          },
+          "display_name": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "aliases": {
+            "$ref": "common.schema.json#/$defs/stringArray"
+          },
+          "data_type": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "semantic_role": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "groupable": {
+            "type": "boolean"
+          },
+          "similar_fields": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/fieldRef"
+            }
+          },
+          "disambiguation_hint": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "allowed_values": {
+            "$ref": "common.schema.json#/$defs/stringArray"
+          }
+        }
+      }
+    },
+    "header_mapping_hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_header", "target_field", "confidence"],
+        "properties": {
+          "source_header": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "target_field": {
+            "$ref": "common.schema.json#/$defs/fieldRef"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "ambiguity_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "when_fields_present",
+          "message",
+          "options",
+          "required"
+        ],
+        "properties": {
+          "rule_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "when_fields_present": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/fieldRef"
+            }
+          },
+          "message": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "options": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/optionObject"
+            }
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "time_parsing_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rule_id",
+          "source_field",
+          "type",
+          "pattern",
+          "outputs",
+          "store_original_text"
+        ],
+        "properties": {
+          "rule_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "source_field": {
+            "$ref": "common.schema.json#/$defs/fieldRef"
+          },
+          "type": {
+            "const": "date_range_parser"
+          },
+          "pattern": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "outputs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/identifier"
+            }
+          },
+          "store_original_text": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "report_period_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "priority",
+        "file_name_patterns",
+        "requires_confirmation_for_reports",
+        "note"
+      ],
+      "properties": {
+        "priority": {
+          "$ref": "common.schema.json#/$defs/stringArray"
+        },
+        "file_name_patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pattern", "output"],
+            "properties": {
+              "pattern": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "output": {
+                "$ref": "common.schema.json#/$defs/identifier"
+              }
+            }
+          }
+        },
+        "requires_confirmation_for_reports": {
+          "type": "boolean"
+        },
+        "note": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "derived_metric_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "target_field", "logic"],
+        "properties": {
+          "rule_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "target_field": {
+            "$ref": "common.schema.json#/$defs/fieldRef"
+          },
+          "logic": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["when", "use_field"],
+                  "properties": {
+                    "when": {
+                      "$ref": "common.schema.json#/$defs/condition"
+                    },
+                    "use_field": {
+                      "$ref": "common.schema.json#/$defs/fieldRef"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["otherwise", "use_field"],
+                  "properties": {
+                    "otherwise": {
+                      "const": true
+                    },
+                    "use_field": {
+                      "$ref": "common.schema.json#/$defs/fieldRef"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "metric_catalog": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "metric_id",
+              "name",
+              "type",
+              "field",
+              "aggregation_rule"
+            ],
+            "properties": {
+              "metric_id": {
+                "$ref": "common.schema.json#/$defs/metricRef"
+              },
+              "name": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "type": {
+                "enum": ["base_metric", "derived_source_metric"]
+              },
+              "field": {
+                "$ref": "common.schema.json#/$defs/fieldRef"
+              },
+              "aggregation_rule": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "metric_id",
+              "name",
+              "type",
+              "formula",
+              "required_fields",
+              "null_strategy"
+            ],
+            "properties": {
+              "metric_id": {
+                "$ref": "common.schema.json#/$defs/metricRef"
+              },
+              "name": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "type": {
+                "const": "derived_metric"
+              },
+              "formula": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              },
+              "required_fields": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "common.schema.json#/$defs/fieldRef"
+                }
+              },
+              "null_strategy": {
+                "$ref": "common.schema.json#/$defs/nonEmptyString"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "source_metric_trust_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ignore_as_final_result_metrics", "reason"],
+      "properties": {
+        "ignore_as_final_result_metrics": {
+          "$ref": "common.schema.json#/$defs/stringArray"
+        },
+        "reason": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "default_filters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "type", "description", "expression"],
+        "properties": {
+          "rule_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "type": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "description": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "expression": {
+            "$ref": "common.schema.json#/$defs/condition"
+          }
+        }
+      }
+    },
+    "metric_specific_exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "applies_to_metrics", "when"],
+        "properties": {
+          "rule_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "applies_to_metrics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/metricRef"
+            }
+          },
+          "when": {
+            "$ref": "common.schema.json#/$defs/condition"
+          }
+        }
+      }
+    },
+    "missing_data_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["states", "untrackable_when", "metric_handling", "result_note_template"],
+      "properties": {
+        "states": {
+          "$ref": "common.schema.json#/$defs/stringArray"
+        },
+        "untrackable_when": {
+          "$ref": "common.schema.json#/$defs/condition"
+        },
+        "metric_handling": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          }
+        },
+        "result_note_template": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "text_semantic_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "fields", "outputs", "priority_keywords"],
+        "properties": {
+          "rule_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/fieldRef"
+            }
+          },
+          "outputs": {
+            "$ref": "common.schema.json#/$defs/stringArray"
+          },
+          "priority_keywords": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "$ref": "common.schema.json#/$defs/stringArray"
+            }
+          }
+        }
+      }
+    },
+    "clarification_cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["card_id", "type", "title", "prompt", "required"],
+        "properties": {
+          "card_id": {
+            "$ref": "common.schema.json#/$defs/identifier"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "single_select",
+              "single_select_or_input",
+              "confirm",
+              "review_list",
+              "multi_select"
+            ]
+          },
+          "title": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "prompt": {
+            "$ref": "common.schema.json#/$defs/nonEmptyString"
+          },
+          "options": {
+            "$ref": "common.schema.json#/$defs/stringArray"
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "clarification_flow": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/stepCardRef"
+      }
+    },
+    "supported_intents": {
+      "$ref": "common.schema.json#/$defs/stringArray"
+    }
+  }
+}

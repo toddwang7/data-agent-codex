@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Agent Codex Prototype</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">DA</div>
+          <div>
+            <div class="brand-title">Data Agent</div>
+            <div class="brand-subtitle">Codex Prototype</div>
+            <div class="brand-version" id="app-version">v0.6.0</div>
+          </div>
+        </div>
+
+        <button class="primary-action">+ 新建分析</button>
+
+        <section class="sidebar-section">
+          <div class="section-title">分析智能体</div>
+          <button class="sidebar-item is-active" data-view="workspace">
+            广告数据智能体
+          </button>
+        </section>
+
+        <section class="sidebar-section">
+          <div class="section-title">会话记录</div>
+          <div id="session-records">
+            <button class="sidebar-item is-active session-item" data-view="workspace" data-session-id="session-1">
+              新建分析 1
+            </button>
+          </div>
+        </section>
+
+        <section class="sidebar-section">
+          <div class="section-title">系统模块</div>
+          <button class="sidebar-item" data-view="config" data-config-module="basic">配置工作台</button>
+          <button class="sidebar-item" data-view="config" data-config-module="rules">运行记录</button>
+          <button class="sidebar-item" data-view="config" data-config-module="template">模板中心</button>
+        </section>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">Agent Workspace</div>
+            <h1 id="view-title">广告数据智能体</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="ghost-button" data-view="workspace">分析工作台</button>
+            <button class="ghost-button" data-view="config">配置工作台</button>
+          </div>
+        </header>
+
+        <section class="view is-visible" id="workspace-view">
+          <div class="workspace-grid">
+            <section class="conversation-column">
+              <div class="panel conversation-panel">
+                <div class="panel-header">
+                  <h2>对话</h2>
+                  <span class="status-pill" id="conversation-status">idle</span>
+                </div>
+                <div class="dataset-ribbon">
+                  <div class="dataset-meta">
+                    <div class="eyebrow">数据集</div>
+                    <div class="dataset-title">上传后即可在对话里发起月报或提问</div>
+                  </div>
+                  <label class="file-picker compact">
+                    <span>上传文件</span>
+                    <input id="file-input" type="file" multiple accept=".xlsx,.xls,.csv" />
+                  </label>
+                </div>
+                <div class="dataset-files" id="file-list">
+                  <span class="file-chip muted">还未上传数据文件</span>
+                </div>
+                <div class="quick-actions-wrap">
+                  <div class="quick-actions">
+                    <button class="chip action-chip primary-chip" data-prompt="生成月报">生成月报</button>
+                  </div>
+                </div>
+                <div class="message-stream" id="message-stream"></div>
+                <div class="composer">
+                  <div class="composer-hint">先上传数据。需要月报就点按钮，其他问题直接输入发送。</div>
+                  <div class="composer-box">
+                    <input id="chat-input" placeholder="上传数据后，直接输入你的分析需求" />
+                    <button id="send-button">发送</button>
+                  </div>
+                  <div class="upload-note" id="status-text">上传 1 个或多个 rawdata 文件后，可以直接在这里发起月报或提问。</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="report-column">
+              <div class="panel report-panel">
+                <div class="panel-header">
+                  <h2>结果</h2>
+                </div>
+                <div class="report-summary" id="report-summary">
+                  <div class="kpi-card">
+                    <div class="kpi-label">报告月份</div>
+                    <div class="kpi-value" id="summary-reporting-month">2025-01 / 2025-02</div>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-label">当前状态</div>
+                    <div class="kpi-value" id="summary-status">待确认后可继续执行</div>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-label">当前请求</div>
+                    <div class="kpi-value positive" id="summary-request">生成跨月月报</div>
+                  </div>
+                </div>
+
+                <div class="report-document-header" id="report-document-header">
+                  <div>
+                    <div class="eyebrow">Report Preview</div>
+                    <div class="report-document-title" id="report-title">广告投放月报预览</div>
+                    <div class="report-document-subtitle" id="report-subtitle">
+                      当前承接结构化报告骨架，后续可继续在对话中要求补充洞察、调整话术和重排结构。
+                    </div>
+                  </div>
+                  <div class="report-outline-card">
+                    <div class="meta-title">报告目录</div>
+                    <div class="report-outline" id="report-outline"></div>
+                  </div>
+                </div>
+
+                <div class="report-meta-grid" id="report-meta-grid">
+                  <div class="meta-card">
+                    <div class="meta-title">结果概况</div>
+                    <div id="report-metadata" class="meta-list"></div>
+                  </div>
+                  <div class="meta-card">
+                    <div class="meta-title">执行说明</div>
+                    <div id="report-timeline" class="timeline-list"></div>
+                  </div>
+                </div>
+
+                <div class="report-sections" id="report-sections"></div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="config-view">
+          <div class="config-grid">
+            <section class="config-nav panel">
+              <div class="panel-header">
+                <h2>配置模块</h2>
+              </div>
+              <div class="module-list">
+                <button class="module-item is-active" data-module="basic">基础信息</button>
+                <button class="module-item" data-module="fields">字段定义</button>
+                <button class="module-item" data-module="metrics">指标定义</button>
+                <button class="module-item" data-module="rules">规则配置</button>
+                <button class="module-item" data-module="clarification">澄清机制</button>
+                <button class="module-item" data-module="template">报告模板</button>
+                <button class="module-item" data-module="flow">执行流程</button>
+              </div>
+            </section>
+
+            <section class="config-editor panel">
+              <div class="panel-header">
+                <h2>结构化配置</h2>
+                <div class="editor-actions">
+                  <span class="status-pill" id="config-save-status">saved draft</span>
+                  <button class="ghost-button" id="save-config-draft">保存草稿</button>
+                </div>
+              </div>
+              <div class="editor-block" id="module-basic" data-module-block="basic">
+                <div class="editor-title">配置总览</div>
+                <div class="config-summary-grid" id="config-summary-grid"></div>
+                <div class="config-edit-grid">
+                  <label class="config-edit-item">
+                    <span>智能体名称</span>
+                    <input id="cfg-agent-name" type="text" />
+                  </label>
+                  <label class="config-edit-item">
+                    <span>支持文件类型</span>
+                    <input id="cfg-file-types" type="text" />
+                  </label>
+                  <label class="config-edit-item full">
+                    <span>智能体描述</span>
+                    <textarea id="cfg-agent-desc" rows="2"></textarea>
+                  </label>
+                </div>
+              </div>
+              <div class="editor-block" id="module-fields" data-module-block="fields">
+                <div class="editor-title">字段定义</div>
+                <div class="config-table" id="config-field-table">
+                  <div class="config-row config-head">
+                    <span>原始字段</span>
+                    <span>标准字段</span>
+                    <span>角色</span>
+                    <span>说明</span>
+                  </div>
+                </div>
+                <label class="config-edit-item full">
+                  <span>字段映射备注（可编辑）</span>
+                  <textarea id="cfg-field-notes" rows="4" placeholder="例如：点位类型字段固定使用 placement_type"></textarea>
+                </label>
+              </div>
+
+              <div class="editor-block" id="module-metrics" data-module-block="metrics">
+                <div class="editor-title">指标定义</div>
+                <div class="config-chip-grid" id="config-metric-grid"></div>
+                <label class="config-edit-item full">
+                  <span>指标公式说明（可编辑）</span>
+                  <textarea id="cfg-metric-notes" rows="4"></textarea>
+                </label>
+              </div>
+
+              <div class="editor-block" id="module-rules" data-module-block="rules">
+                <div class="editor-title">规则配置</div>
+                <div id="config-rule-list"></div>
+                <label class="config-edit-item full">
+                  <span>规则草稿（可编辑）</span>
+                  <textarea id="cfg-rule-notes" rows="5"></textarea>
+                </label>
+              </div>
+
+              <div class="editor-block" id="module-clarification" data-module-block="clarification">
+                <div class="editor-title">澄清机制</div>
+                <div id="config-clarification-list"></div>
+                <label class="config-edit-item full">
+                  <span>澄清策略（可编辑）</span>
+                  <textarea id="cfg-clarification-notes" rows="4"></textarea>
+                </label>
+              </div>
+
+              <div class="editor-block" id="module-template" data-module-block="template">
+                <div class="editor-title">报告模板</div>
+                <div id="config-template-list"></div>
+                <label class="config-edit-item full">
+                  <span>报告模板说明（可编辑）</span>
+                  <textarea id="cfg-template-notes" rows="5"></textarea>
+                </label>
+              </div>
+
+              <div class="editor-block" id="module-flow" data-module-block="flow">
+                <div class="editor-title">执行流程</div>
+                <label class="config-edit-item full">
+                  <span>流程定义（可编辑）</span>
+                  <textarea id="cfg-flow-notes" rows="5" placeholder="例如：上传 -> 澄清 -> 计划 -> 报告"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section class="config-assistant panel">
+              <div class="panel-header">
+                <h2>自然语言助手</h2>
+                <span class="status-pill soft">assist only</span>
+              </div>
+              <div class="assistant-box">
+                <textarea class="assistant-input" id="assistant-input-preview" rows="6" placeholder="输入自然语言配置需求，比如：FREE点位不纳入成本，补量标记特殊样本"></textarea>
+                <div class="assistant-actions">
+                  <button class="ghost-button" id="assistant-parse-btn">解析配置</button>
+                  <button class="primary-action small" id="assistant-apply-btn">应用到配置</button>
+                </div>
+                <div class="assistant-output">
+                  <div class="assistant-title">解析结果</div>
+                  <div id="assistant-suggestion-list"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "template_id": "ad-monthly-report-multi-month-v1",
+  "name": "广告月报-跨月模板",
+  "trigger_intents": ["monthly_report", "cross_month_comparison"],
+  "applicability": {
+    "month_count_min": 2
+  },
+  "required_confirmations": [
+    "time_range",
+    "cost_rule_confirmation",
+    "special_sample_handling"
+  ],
+  "sections": [
+    {
+      "section_id": "header",
+      "title": "报告头部",
+      "output_blocks": [
+        "title",
+        "time_range",
+        "dataset_summary",
+        "comparison_scope_note"
+      ]
+    },
+    {
+      "section_id": "overall_overview",
+      "title": "整体情况",
+      "required_data": [
+        "monthly_summary",
+        "vehicle_model_summary",
+        "high_intent_cost",
+        "valid_visitor_cost"
+      ],
+      "output_blocks": [
+        "metric_cards",
+        "month_over_month_summary_chart",
+        "summary_text"
+      ]
+    },
+    {
+      "section_id": "media_trend",
+      "title": "媒体趋势",
+      "required_data": [
+        "media_monthly_trend",
+        "shared_pattern_detection"
+      ],
+      "output_blocks": [
+        "trend_chart",
+        "pattern_summary",
+        "recommended_actions"
+      ]
+    },
+    {
+      "section_id": "vehicle_breakdown",
+      "title": "分车型具体表现",
+      "required_data": [
+        "vehicle_monthly_breakdown",
+        "media_placement_monthly_trend",
+        "conversion_funnel_breakdown"
+      ],
+      "output_blocks": [
+        "vehicle_tabs",
+        "month_over_month_breakdown_chart",
+        "funnel_analysis_text",
+        "insight_text",
+        "next_actions"
+      ]
+    },
+    {
+      "section_id": "other_insights",
+      "title": "其他洞察",
+      "required_data": [
+        "special_samples_summary",
+        "cross_vehicle_patterns",
+        "cross_media_patterns"
+      ],
+      "output_blocks": [
+        "insight_cards",
+        "warning_notes"
+      ]
+    },
+    {
+      "section_id": "conclusion_actions",
+      "title": "结论与行动建议",
+      "required_data": [
+        "top_findings",
+        "recommended_actions"
+      ],
+      "output_blocks": [
+        "bullet_summary",
+        "action_list"
+      ]
+    }
+  ]
+}

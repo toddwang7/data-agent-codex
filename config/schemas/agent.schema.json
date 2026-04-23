@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data-agent-codex.local/schemas/agent.schema.json",
+  "title": "Data Agent Definition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "agent_id",
+    "name",
+    "description",
+    "status",
+    "domain",
+    "supported_file_types",
+    "capabilities",
+    "dataset_profile",
+    "default_task_flow",
+    "clarification_policy",
+    "template_refs"
+  ],
+  "properties": {
+    "agent_id": {
+      "$ref": "common.schema.json#/$defs/identifier"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "description": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "disabled", "archived"]
+    },
+    "domain": {
+      "$ref": "common.schema.json#/$defs/nonEmptyString"
+    },
+    "supported_file_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["csv", "xlsx", "xls", "tsv", "json"]
+      }
+    },
+    "capabilities": {
+      "$ref": "common.schema.json#/$defs/stringArray"
+    },
+    "dataset_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "expected_granularity",
+        "required_minimum_fields",
+        "recommended_fields"
+      ],
+      "properties": {
+        "summary": {
+          "$ref": "common.schema.json#/$defs/nonEmptyString"
+        },
+        "expected_granularity": {
+          "$ref": "common.schema.json#/$defs/stringArray"
+        },
+        "required_minimum_fields": {
+          "$ref": "common.schema.json#/$defs/stringArray"
+        },
+        "recommended_fields": {
+          "$ref": "common.schema.json#/$defs/stringArray"
+        }
+      }
+    },
+    "default_task_flow": {
+      "$ref": "common.schema.json#/$defs/stringArray"
+    },
+    "clarification_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_before_execution", "confirmation_style"],
+      "properties": {
+        "required_before_execution": {
+          "$ref": "common.schema.json#/$defs/stringArray"
+        },
+        "confirmation_style": {
+          "type": "string",
+          "enum": [
+            "button_first",
+            "dialog_first",
+            "free_text_first"
+          ]
+        }
+      }
+    },
+    "template_refs": {
+      "$ref": "common.schema.json#/$defs/stringArray"
+    }
+  }
+}
