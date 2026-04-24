@@ -34,3 +34,8 @@ git push origin v0.7.0
 - design + engineering showcase
 - local-first product prototype
 - configurable agent workflow example
+
+## Public demo note
+
+- The current public demo is Chinese-only.
+- Example conversations, report flows, and UI copy are currently optimized for the Chinese ad-analysis demo scenario.

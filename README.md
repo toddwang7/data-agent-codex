@@ -3,6 +3,10 @@
 
 A local-first, configurable data analysis agent prototype.
 
+Current public demo status:
+- the interactive demo is currently Chinese-only
+- example workflows and UI copy are optimized for the Chinese ad-analysis scenario first
+
 This repo focuses on:
 - file upload intake (`xlsx`/`csv`)
 - structured clarification -> plan -> execution flow
@@ -76,6 +80,7 @@ See `.env.example` for template values.
 
 - Access the app through the web server URL; do not open `prototype/index.html` directly for full functionality.
 - This is a prototype repository intended for iteration and portfolio demonstration.
+- The current public demo is Chinese-only. Multi-language UX is not finished in this version.
 
 ## GitHub publishing
 
