@@ -73,6 +73,101 @@ def _condense_execution(execution: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _call_glm_json(system_prompt: str, user_payload: dict[str, Any]) -> dict[str, Any]:
+    api_key = os.environ.get("GLM_API_KEY")
+    if not api_key:
+        raise RuntimeError("GLM_API_KEY is not configured.")
+
+    base_url = os.environ.get("GLM_BASE_URL", DEFAULT_GLM_BASE_URL).rstrip("/")
+    model = os.environ.get("GLM_MODEL", DEFAULT_GLM_MODEL)
+
+    body = {
+        "model": model,
+        "temperature": 0.2,
+        "stream": False,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)},
+        ],
+    }
+
+    request = Request(
+        f"{base_url}/chat/completions",
+        data=json.dumps(body, ensure_ascii=False).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    payload = None
+    last_timeout_error: Exception | None = None
+    for timeout_seconds in (45, 90):
+        try:
+            with urlopen(request, timeout=timeout_seconds, context=_build_ssl_context()) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+            break
+        except HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="ignore")
+            raise RuntimeError(f"GLM HTTP {exc.code}: {detail}") from exc
+        except TimeoutError as exc:
+            last_timeout_error = exc
+            continue
+        except socket.timeout as exc:
+            last_timeout_error = exc
+            continue
+        except URLError as exc:
+            if "timed out" in str(exc).lower():
+                last_timeout_error = exc
+                continue
+            raise RuntimeError(f"GLM network error: {exc}") from exc
+
+    if payload is None:
+        raise RuntimeError(f"The read operation timed out: {last_timeout_error}")
+
+    text = (
+        payload.get("choices", [{}])[0]
+        .get("message", {})
+        .get("content", "")
+    )
+    parsed = _extract_json(text)
+    if not parsed:
+        raise RuntimeError(f"Model returned non-JSON planning output: {text[:300]}")
+    return parsed
+
+
+def plan_query_with_llm(
+    *,
+    user_request: str,
+    conversation_history: list[dict[str, Any]] | None,
+    query_context: dict[str, Any],
+) -> dict[str, Any]:
+    system_prompt = (
+        "你是数据分析 Agent 的查询规划器。"
+        "你的任务不是回答问题，而是把用户问题和上下文转成结构化 query spec。"
+        "请输出严格 JSON，不要输出 JSON 之外的任何文字。"
+        '格式为 {"goal": string, "metric_key": string, "metric_label": string, '
+        '"filters": {"month": string|null, "vehicle": string|null, "media": string|null, "placement": string|null}, '
+        '"requested_dimensions": [string], "sort_direction": "asc"|"desc", "limit": number, '
+        '"needs_clarification": boolean, "clarification_question": string, "clarification_options": [string], "interpretation": string}.'
+        "goal 只能是 confirm_presence / retrieve_value / inspect_breakdown / compare_entities。"
+        "requested_dimensions 只能使用 month / vehicle / media / placement。"
+        "filters 的值必须从给定可选值中选择，不能编造。"
+        "如果问题里有追问、省略或上下文承接，应该结合 conversation_history 理解。"
+        "如果你已能理解，就 needs_clarification=false，clarification_options 返回空数组。"
+        "如果需要澄清，clarification_options 最多给 3 个简短可点击选项。"
+    )
+    return _call_glm_json(
+        system_prompt,
+        {
+            "user_request": user_request,
+            "conversation_history": conversation_history or [],
+            "query_context": query_context,
+        },
+    )
+
+
 def generate_llm_response(
     *,
     user_request: str | None,
@@ -82,13 +177,6 @@ def generate_llm_response(
     clarification_cards: list[dict[str, Any]],
     execution: dict[str, Any],
 ) -> dict[str, Any]:
-    api_key = os.environ.get("GLM_API_KEY")
-    if not api_key:
-        raise RuntimeError("GLM_API_KEY is not configured.")
-
-    base_url = os.environ.get("GLM_BASE_URL", DEFAULT_GLM_BASE_URL).rstrip("/")
-    model = os.environ.get("GLM_MODEL", DEFAULT_GLM_MODEL)
-
     context_payload = {
         "request": user_request,
         "conversation_history": conversation_history or [],
@@ -131,64 +219,12 @@ def generate_llm_response(
         "4. bullets 每段最多 3 条。"
         "5. 不要编造上下文中没有的数据。"
     )
-
-    body = {
-        "model": model,
-        "temperature": 0.3,
-        "stream": False,
-        "messages": [
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": json.dumps(context_payload, ensure_ascii=False)},
-        ],
-    }
-
-    request = Request(
-        f"{base_url}/chat/completions",
-        data=json.dumps(body, ensure_ascii=False).encode("utf-8"),
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        method="POST",
-    )
-
-    payload = None
-    last_timeout_error: Exception | None = None
-    for timeout_seconds in (90, 180):
-        try:
-            with urlopen(request, timeout=timeout_seconds, context=_build_ssl_context()) as response:
-                payload = json.loads(response.read().decode("utf-8"))
-            break
-        except HTTPError as exc:
-            detail = exc.read().decode("utf-8", errors="ignore")
-            raise RuntimeError(f"GLM HTTP {exc.code}: {detail}") from exc
-        except TimeoutError as exc:
-            last_timeout_error = exc
-            continue
-        except socket.timeout as exc:
-            last_timeout_error = exc
-            continue
-        except URLError as exc:
-            if "timed out" in str(exc).lower():
-                last_timeout_error = exc
-                continue
-            raise RuntimeError(f"GLM network error: {exc}") from exc
-
-    if payload is None:
-        raise RuntimeError(f"The read operation timed out: {last_timeout_error}")
-
-    text = (
-        payload.get("choices", [{}])[0]
-        .get("message", {})
-        .get("content", "")
-    )
-    parsed = _extract_json(text)
+    parsed = _call_glm_json(prompt, context_payload)
     if not parsed:
         return {
-            "assistant_message": text or "模型已返回，但结果格式不符合预期。",
+            "assistant_message": "模型已返回，但结果格式不符合预期。",
             "report_sections": [],
             "follow_up_suggestions": [],
-            "raw_content": text,
         }
     return {
         "assistant_message": parsed.get("assistant_message") or "",

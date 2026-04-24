@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7.0 - 2026-04-24
+
+- Switched free-form QA to an LLM-first query planning flow with rule fallback.
+- Added in-chat query plan rendering, structured result cards, lightweight clarification, and execution trace.
+- Added clickable follow-up suggestions and clarification options in the QA flow.
+- Improved multi-turn session memory by carrying agent-side structured understanding through conversation history.
+- Extended QA test coverage for comparison, follow-up context, clarification, and contextual follow-up suggestions.
+
 ## v0.6.0 - 2026-04-23
 
 - Added session records with isolated per-session state.

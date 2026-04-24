@@ -6,7 +6,7 @@ from typing import Any
 from openpyxl import load_workbook
 
 from .config_loader import AgentRuntimeConfig
-from .executor import execute_monthly_report
+from .executor import execute_monthly_report, execute_question_answering
 from .intake import (
     classify_special_samples,
     extract_row_dicts,
@@ -154,9 +154,17 @@ def run_intake_workflow(
         "conversation_history": conversation_history or [],
     }
     if execute:
-        result["execution"] = execute_monthly_report(
-            runtime_config=agent_config,
-            workflow_output=result,
-            confirmation_state=confirmation_state,
-        )
+        if task_type == "question_answering":
+            result["execution"] = execute_question_answering(
+                runtime_config=agent_config,
+                workflow_output=result,
+                confirmation_state=confirmation_state,
+                user_request=user_request,
+            )
+        else:
+            result["execution"] = execute_monthly_report(
+                runtime_config=agent_config,
+                workflow_output=result,
+                confirmation_state=confirmation_state,
+            )
     return result

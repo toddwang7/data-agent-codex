@@ -14,16 +14,19 @@
           <div>
             <div class="brand-title">Data Agent</div>
             <div class="brand-subtitle">Codex Prototype</div>
-            <div class="brand-version" id="app-version">v0.6.0</div>
+            <div class="brand-version" id="app-version">v0.7.0</div>
           </div>
         </div>
 
-        <button class="primary-action">+ 新建分析</button>
+        <button class="primary-action" id="new-session-button">+ 新建分析</button>
 
         <section class="sidebar-section">
           <div class="section-title">分析智能体</div>
-          <button class="sidebar-item is-active" data-view="workspace">
+          <button class="sidebar-item is-active agent-item" data-view="workspace" data-agent-id="ad-analysis">
             广告数据智能体
+          </button>
+          <button class="sidebar-item agent-item new-agent-entry" data-view="config" data-config-module="agent-builder" data-agent-id="new-agent">
+            + 新建智能体
           </button>
         </section>
 
@@ -97,44 +100,45 @@
             <section class="report-column">
               <div class="panel report-panel">
                 <div class="panel-header">
-                  <h2>结果</h2>
+                  <h2>产物面板</h2>
+                  <span class="status-pill soft" id="artifact-mode-pill">idle</span>
                 </div>
                 <div class="report-summary" id="report-summary">
                   <div class="kpi-card">
-                    <div class="kpi-label">报告月份</div>
-                    <div class="kpi-value" id="summary-reporting-month">2025-01 / 2025-02</div>
+                    <div class="kpi-label">当前产物</div>
+                    <div class="kpi-value" id="summary-reporting-month">未生成</div>
                   </div>
                   <div class="kpi-card">
-                    <div class="kpi-label">当前状态</div>
-                    <div class="kpi-value" id="summary-status">待确认后可继续执行</div>
+                    <div class="kpi-label">产物状态</div>
+                    <div class="kpi-value" id="summary-status">等待报告任务</div>
                   </div>
                   <div class="kpi-card">
-                    <div class="kpi-label">当前请求</div>
-                    <div class="kpi-value positive" id="summary-request">生成跨月月报</div>
+                    <div class="kpi-label">当前任务</div>
+                    <div class="kpi-value positive" id="summary-request">仅在生成报告时展示</div>
                   </div>
                 </div>
 
                 <div class="report-document-header" id="report-document-header">
                   <div>
-                    <div class="eyebrow">Report Preview</div>
-                    <div class="report-document-title" id="report-title">广告投放月报预览</div>
+                    <div class="eyebrow">Artifact</div>
+                    <div class="report-document-title" id="report-title">尚未生成正式产物</div>
                     <div class="report-document-subtitle" id="report-subtitle">
-                      当前承接结构化报告骨架，后续可继续在对话中要求补充洞察、调整话术和重排结构。
+                      普通问答会直接留在对话区。只有明确要求生成报告时，右侧才会展开正式产物。
                     </div>
                   </div>
                   <div class="report-outline-card">
-                    <div class="meta-title">报告目录</div>
+                    <div class="meta-title">产物目录</div>
                     <div class="report-outline" id="report-outline"></div>
                   </div>
                 </div>
 
                 <div class="report-meta-grid" id="report-meta-grid">
                   <div class="meta-card">
-                    <div class="meta-title">结果概况</div>
+                    <div class="meta-title">产物概况</div>
                     <div id="report-metadata" class="meta-list"></div>
                   </div>
                   <div class="meta-card">
-                    <div class="meta-title">执行说明</div>
+                    <div class="meta-title">执行过程</div>
                     <div id="report-timeline" class="timeline-list"></div>
                   </div>
                 </div>
@@ -149,29 +153,40 @@
           <div class="config-grid">
             <section class="config-nav panel">
               <div class="panel-header">
-                <h2>配置模块</h2>
+                <h2>智能体设计</h2>
               </div>
               <div class="module-list">
-                <button class="module-item is-active" data-module="basic">基础信息</button>
-                <button class="module-item" data-module="fields">字段定义</button>
-                <button class="module-item" data-module="metrics">指标定义</button>
-                <button class="module-item" data-module="rules">规则配置</button>
-                <button class="module-item" data-module="clarification">澄清机制</button>
-                <button class="module-item" data-module="template">报告模板</button>
-                <button class="module-item" data-module="flow">执行流程</button>
+                <button class="module-item is-active" data-module="agent-builder">新建智能体</button>
+                <button class="module-item" data-module="agent-profile">智能体画像</button>
+                <button class="module-item" data-module="data-semantics">数据语义</button>
+                <button class="module-item" data-module="analysis-rules">分析规则</button>
+                <button class="module-item" data-module="report-output">报告与产物</button>
               </div>
             </section>
 
             <section class="config-editor panel">
               <div class="panel-header">
-                <h2>结构化配置</h2>
+                <h2>智能体配置</h2>
                 <div class="editor-actions">
                   <span class="status-pill" id="config-save-status">saved draft</span>
                   <button class="ghost-button" id="save-config-draft">保存草稿</button>
                 </div>
               </div>
-              <div class="editor-block" id="module-basic" data-module-block="basic">
-                <div class="editor-title">配置总览</div>
+              <div class="editor-block" id="module-agent-builder" data-module-block="agent-builder">
+                <div class="editor-title">先用自然语言定义这个智能体</div>
+                <p class="config-lead">
+                  先描述它分析什么数据、你关心哪些字段、默认规则是什么、通常会回答什么问题。系统再把这些内容整理成后面的结构化草稿。
+                </p>
+                <label class="config-edit-item full">
+                  <span>智能体需求描述</span>
+                  <textarea id="agent-builder-input" rows="8" placeholder="例如：这是一个分析网站浏览数据的智能体。核心字段包括用户ID、来源渠道、页面URL、访问时间、转化事件。需要支持漏斗、页面表现、自然语言问答和周报。"></textarea>
+                </label>
+                <div class="assistant-actions">
+                  <button class="primary-action small" id="generate-agent-draft">生成智能体草稿</button>
+                </div>
+              </div>
+              <div class="editor-block" id="module-agent-profile" data-module-block="agent-profile">
+                <div class="editor-title">智能体画像</div>
                 <div class="config-summary-grid" id="config-summary-grid"></div>
                 <div class="config-edit-grid">
                   <label class="config-edit-item">
@@ -183,13 +198,14 @@
                     <input id="cfg-file-types" type="text" />
                   </label>
                   <label class="config-edit-item full">
-                    <span>智能体描述</span>
-                    <textarea id="cfg-agent-desc" rows="2"></textarea>
+                    <span>适用场景描述</span>
+                    <textarea id="cfg-agent-desc" rows="3"></textarea>
                   </label>
                 </div>
               </div>
-              <div class="editor-block" id="module-fields" data-module-block="fields">
-                <div class="editor-title">字段定义</div>
+              <div class="editor-block" id="module-data-semantics" data-module-block="data-semantics">
+                <div class="editor-title">数据语义</div>
+                <p class="config-lead">字段定义不是逐列死填，而是先给出这个智能体通常会识别哪些关键字段和它们的业务含义。</p>
                 <div class="config-table" id="config-field-table">
                   <div class="config-row config-head">
                     <span>原始字段</span>
@@ -199,69 +215,57 @@
                   </div>
                 </div>
                 <label class="config-edit-item full">
-                  <span>字段映射备注（可编辑）</span>
-                  <textarea id="cfg-field-notes" rows="4" placeholder="例如：点位类型字段固定使用 placement_type"></textarea>
+                  <span>字段和语义说明</span>
+                  <textarea id="cfg-field-notes" rows="5" placeholder="例如：点位类型固定用于媒体点位分析；备注和adslot用于特殊样本判断。"></textarea>
                 </label>
               </div>
-
-              <div class="editor-block" id="module-metrics" data-module-block="metrics">
-                <div class="editor-title">指标定义</div>
+              <div class="editor-block" id="module-analysis-rules" data-module-block="analysis-rules">
+                <div class="editor-title">分析规则</div>
+                <p class="config-lead">这里描述默认分析口径、固定处理规则，以及什么情况下才需要用户确认。</p>
                 <div class="config-chip-grid" id="config-metric-grid"></div>
                 <label class="config-edit-item full">
-                  <span>指标公式说明（可编辑）</span>
+                  <span>核心指标和公式说明</span>
                   <textarea id="cfg-metric-notes" rows="4"></textarea>
                 </label>
-              </div>
-
-              <div class="editor-block" id="module-rules" data-module-block="rules">
-                <div class="editor-title">规则配置</div>
                 <div id="config-rule-list"></div>
                 <label class="config-edit-item full">
-                  <span>规则草稿（可编辑）</span>
+                  <span>默认规则</span>
                   <textarea id="cfg-rule-notes" rows="5"></textarea>
                 </label>
-              </div>
-
-              <div class="editor-block" id="module-clarification" data-module-block="clarification">
-                <div class="editor-title">澄清机制</div>
                 <div id="config-clarification-list"></div>
                 <label class="config-edit-item full">
-                  <span>澄清策略（可编辑）</span>
+                  <span>仅在不确定时才提问的澄清策略</span>
                   <textarea id="cfg-clarification-notes" rows="4"></textarea>
                 </label>
               </div>
-
-              <div class="editor-block" id="module-template" data-module-block="template">
-                <div class="editor-title">报告模板</div>
+              <div class="editor-block" id="module-report-output" data-module-block="report-output">
+                <div class="editor-title">报告与产物</div>
+                <p class="config-lead">这里只定义大结构和产物风格。真正的分析计划应该在每次任务执行时动态展开。</p>
                 <div id="config-template-list"></div>
                 <label class="config-edit-item full">
-                  <span>报告模板说明（可编辑）</span>
+                  <span>报告大结构</span>
                   <textarea id="cfg-template-notes" rows="5"></textarea>
                 </label>
-              </div>
-
-              <div class="editor-block" id="module-flow" data-module-block="flow">
-                <div class="editor-title">执行流程</div>
                 <label class="config-edit-item full">
-                  <span>流程定义（可编辑）</span>
-                  <textarea id="cfg-flow-notes" rows="5" placeholder="例如：上传 -> 澄清 -> 计划 -> 报告"></textarea>
+                  <span>产物流程说明</span>
+                  <textarea id="cfg-flow-notes" rows="5" placeholder="例如：普通问答直接在对话区回答；明确生成报告时才进入右侧产物面板。"></textarea>
                 </label>
               </div>
             </section>
 
             <section class="config-assistant panel">
               <div class="panel-header">
-                <h2>自然语言助手</h2>
-                <span class="status-pill soft">assist only</span>
+                <h2>配置助手</h2>
+                <span class="status-pill soft">natural language first</span>
               </div>
               <div class="assistant-box">
-                <textarea class="assistant-input" id="assistant-input-preview" rows="6" placeholder="输入自然语言配置需求，比如：FREE点位不纳入成本，补量标记特殊样本"></textarea>
+                <textarea class="assistant-input" id="assistant-input-preview" rows="8" placeholder="直接写你的业务说明、字段解释、分析要求、默认规则和报告偏好。"></textarea>
                 <div class="assistant-actions">
                   <button class="ghost-button" id="assistant-parse-btn">解析配置</button>
                   <button class="primary-action small" id="assistant-apply-btn">应用到配置</button>
                 </div>
                 <div class="assistant-output">
-                  <div class="assistant-title">解析结果</div>
+                  <div class="assistant-title">系统整理出的配置建议</div>
                   <div id="assistant-suggestion-list"></div>
                 </div>
               </div>

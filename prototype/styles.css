@@ -478,8 +478,254 @@ input {
   margin-top: 12px;
 }
 
+.query-card {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(91, 74, 53, 0.08);
+}
+
+.query-card-head,
+.query-table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.query-table-main,
+.query-child-row {
+  display: grid;
+  align-items: center;
+  gap: 12px;
+}
+
+.query-card-title {
+  font-weight: 700;
+  color: #4f2b18;
+}
+
+.query-card-mode,
+.query-card-metric {
+  font-size: 12px;
+  color: #7b634d;
+}
+
+.query-card-meta {
+  margin-top: 6px;
+  color: #8a7565;
+  font-size: 12px;
+}
+
+.query-plan-box {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(121, 102, 82, 0.06);
+  border: 1px solid rgba(121, 102, 82, 0.08);
+}
+
+.query-plan-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6f5d4a;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.query-plan-grid {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.query-plan-row {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 10px;
+}
+
+.query-plan-label {
+  color: #8a7565;
+  font-size: 12px;
+}
+
+.query-plan-value {
+  color: #4f2b18;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.query-card-metric {
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.query-card-interpretation {
+  margin-top: 8px;
+  color: #7b634d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.query-card-summary {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.query-card-summary.positive {
+  background: rgba(45, 122, 87, 0.1);
+  color: #256547;
+}
+
+.query-card-summary.neutral {
+  background: rgba(121, 102, 82, 0.08);
+  color: #6f5d4a;
+}
+
+.query-table {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.query-table-head {
+  color: #7b634d;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.query-table-row {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(91, 74, 53, 0.06);
+}
+
+.query-table-label,
+.query-child-label {
+  font-weight: 600;
+}
+
+.query-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(121, 102, 82, 0.12);
+  overflow: hidden;
+  min-width: 90px;
+  flex: 1;
+}
+
+.query-bar-track.child {
+  min-width: 72px;
+}
+
+.query-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(199, 91, 47, 0.45), rgba(199, 91, 47, 0.92));
+}
+
+.query-table-value,
+.query-child-value {
+  color: #8e3e1d;
+  font-variant-numeric: tabular-nums;
+  min-width: 64px;
+  text-align: right;
+}
+
+.query-children {
+  display: grid;
+  gap: 6px;
+  padding-top: 4px;
+}
+
+.query-child-row {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(199, 91, 47, 0.06);
+  grid-template-columns: minmax(88px, 1fr) minmax(72px, 1fr) auto;
+}
+
+.query-table-main {
+  grid-template-columns: minmax(96px, 1fr) minmax(96px, 1.2fr) auto;
+}
+
+.query-trace {
+  margin-top: 12px;
+  border-top: 1px dashed rgba(91, 74, 53, 0.14);
+  padding-top: 10px;
+}
+
+.query-trace summary {
+  cursor: pointer;
+  color: #7b634d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.query-trace-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.query-trace-row {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(121, 102, 82, 0.06);
+}
+
+.query-trace-step {
+  font-weight: 700;
+  color: #4f2b18;
+}
+
+.query-trace-detail {
+  margin-top: 4px;
+  color: #6f5d4a;
+  line-height: 1.5;
+  font-size: 13px;
+}
+
+.query-followups {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(91, 74, 53, 0.14);
+}
+
+.query-followups-title {
+  color: #7b634d;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.query-followup-button {
+  background: rgba(45, 122, 87, 0.08);
+  border-color: rgba(45, 122, 87, 0.22);
+  color: #2d7a57;
+}
+
 .clarification-actions {
   margin-top: 10px;
+}
+
+.query-clarification-actions {
+  margin-top: 12px;
+}
+
+.query-clarification-actions .chip-button {
+  background: rgba(199, 91, 47, 0.1);
+  border-color: rgba(199, 91, 47, 0.24);
+  color: #8e3e1d;
 }
 
 .clarification-card-head {

@@ -9,7 +9,7 @@ This repo focuses on:
 - configurable agent semantics (fields, rules, templates)
 - local web UI + Python execution pipeline
 
-## Current scope (v0.6.0)
+## Current scope (v0.7.0)
 
 - Multi-step workflow: upload -> clarification card -> plan review -> report
 - Session records with isolated session state
@@ -17,6 +17,10 @@ This repo focuses on:
 - Natural-language assistant input in Config Studio (parse/apply to draft)
 - GLM-compatible LLM integration for final response generation
 - Execution fallback visuals (charts/tables) even when LLM fails
+- LLM-first query planning for free-form QA, with rule fallback only as backup
+- Query plan / result / clarification / trace rendered directly in chat
+- Clickable lightweight clarification options and follow-up suggestions
+- Context-aware multi-turn QA memory across session history
 
 ## Project structure
 
