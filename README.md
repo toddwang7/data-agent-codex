@@ -1,4 +1,5 @@
 # data-agent-codex
+<img width="2874" height="1478" alt="image" src="https://github.com/user-attachments/assets/8ddf0090-f7a9-46da-a9ab-d0680ee6869a" />
 
 A local-first, configurable data analysis agent prototype.
 
@@ -6,7 +7,11 @@ This repo focuses on:
 - file upload intake (`xlsx`/`csv`)
 - structured clarification -> plan -> execution flow
 - monthly-report and free-form QA entry points
+  <img width="1050" height="1462" alt="image" src="https://github.com/user-attachments/assets/217c65f2-7be7-4568-8b09-fcafc91d5ab4" />
+
 - configurable agent semantics (fields, rules, templates)
+  <img width="2876" height="1464" alt="image" src="https://github.com/user-attachments/assets/2adb3ec4-83f0-4260-82d9-a6ee5049e151" />
+
 - local web UI + Python execution pipeline
 
 ## Current scope (v0.7.0)
